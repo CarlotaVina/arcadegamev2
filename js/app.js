@@ -15,24 +15,18 @@ var Enemyv1 = function() {
    
 }
 
-var Enemy = function(x,y){
+var Enemy = function(x,y,speed){
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-	console.log("new enemy");
+	
     this.sprite = 'images/enemy-bug.png'; 
     this.x = x;
     this.y = y;
-    console.log("in enemy x coordenate ");
-    console.log(this.x);
-    console.log("in enemy y coordenate");
-    console.log(this.y);
-    console.log("end enemy");
-    //var obj = Object.create(Enemy.prototype);
-    //return obj;
-     
+    this.speed = speed;
+        
    
 }
 // Update the enemy's position, required method for game
@@ -41,73 +35,126 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
-	console.log("principio de update");
-	this.x = this.x * dt;
-	this.y = this.y * dt;
-	console.log("final de update");
+	
+	this.x = this.x + this.speed * dt;
+	
 }
 
-Enemy.prototype.initialPosition = function(x,y) {
-	console.log("intial position antes");
-	console.log(x);
-	console.log(y);
-	this.x = x;
-	this.y = y;
-	console.log(this.x);
-	console.log(this.y);
-}
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-	console.log("start render");
-	// this.sprite = 'images/enemy-bug.png';
-	// this.x = 100;
-	 //this.y = 100;
-	console.log('x coordenate this.x');
-	console.log(this.x);
-	console.log('y coordenate this.y');
-	console.log(this.y);
-	console.log(this.sprite);
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    console.log("end render");
-    
+		
+	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+   
 }
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 
-var Player = function() {
+var Player = function(x,y,speed) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/char-boy.png';
-    var obj = Object.create(Player.prototype);
-    return obj;
+    this.sprite = 'images/char-boy.png'; 
+    this.x = x;
+    this.y = y;
+    this.speed = speed;
+    
+  
     
    
 }
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Player.prototype.update = function(dt) {
+Player.prototype.update = function() {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
 	
-	this.x = this.x * dt;
-	this.y = this.y * dt;
+	
+	this.x = this.x ;
+	
 }
 
-Player.prototype.initialPosition = function(x,y) {
-	this.x = x;
-	this.y = y;
-}
+
 // Draw the enemy on the screen, required method for game
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+	
+	ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
+Player.prototype.collisions = function() {
+	
+	console.log("startcollisions ");
+	console.log("collisions player this.x "+player.x);
+
+	console.log("collisions player this.y "+player.y);
+	
+	
+	console.log("first enemy x "+Math.floor(allEnemies[1].x));
+	
+	console.log("first enemy y "+allEnemies[1].y);
+	
+	console.log("second enemy x "+Math.floor(allEnemies[2].x));
+	
+	console.log("second enemy y "+allEnemies[2].y);
+	
+	console.log("third enemy x "+Math.floor(allEnemies[3].x));
+	
+	console.log("third enemy y "+allEnemies[3].y);
+	
+	if ((parseInt(player.x) == Math.floor(parseInt(allEnemies[1].x))) && (parseInt(player.y) == parseInt(allEnemies[1].y))) {
+	console.log("colision 1");
+	  player.x = 0;
+      player.y = 0;
+    allEnemies[1].x = 0;
+  	allEnemies[1].y = 0;
+      
+     }
+	if ((parseInt(player.x) == Math.floor(parseInt(allEnemies[2].x))) && (parseInt(player.y) == parseInt(allEnemies[2].y))) {
+	console.log("colision 2");
+	   player.x = 0;
+	   player.y = 0;
+	      
+	     }
+	
+	if ((parseInt(player.x) == Math.floor(parseInt(allEnemies[3].x))) && (parseInt(player.y) == parseInt(allEnemies[3].y))) {
+		console.log("colision 3");
+		   player.x = 0;
+		   player.y = 0;
+		     }
+	
+	
+}
+Player.prototype.handleInput = function(event) {
+	
+	
+	if (event == "up") {
+		
+		this.y= this.y - 10;
+		
+		
+	}
+	if (event == "down") {
+		
+		this.y= this.y + 10;
+		
+	}
+	if (event == "right") {
+		
+		this.x= this.x + 10;
+		
+	}
+	if (event == "left") {
+		
+		this.x= this.x - 10;
+		
+	}
+	
+		
 }
 
 // Now instantiate your objects.
@@ -119,14 +166,12 @@ a['a1']='foo';
 a['a2']='bar';
 
 var allEnemies = new Array();
-//console.log("principal creando enemigo 1");
-//allEnemies[0] = new Enemy(100,100);
-console.log("creating enemy one completo");
-allEnemies[1] = new Enemy(100,200);
-console.log("end enemies");
-var player = Player();
 
-player.initialPosition(4,4);
+allEnemies[1] = new Enemy(0,50,20);
+allEnemies[2] = new Enemy(0,200,30);
+allEnemies[3] = new Enemy(0,300,50);
+
+var player = new Player(200,400,4);
 console.log("principal final jugador");
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -137,6 +182,8 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
-    //player.handleInput(allowedKeys[e.keyCode]);
+    
+   
+    
+    player.handleInput(allowedKeys[e.keyCode]);
 });

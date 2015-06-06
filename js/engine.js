@@ -14,6 +14,7 @@
  * a little simpler to work with.
  */
 
+var requestId;
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -39,14 +40,20 @@ var Engine = (function(global) {
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
+    	
+    	
         var now = Date.now(),
-            dt = (now - lastTime) / 1000.0;
+                          dt = (now - lastTime) / 1000.0;
+        
 
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
+       
         update(dt);
         render();
+        
+
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -56,19 +63,24 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+         requestId = win.requestAnimationFrame(main);
+      
+    
+        
     };
-
+    
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
      * game loop.
      */
     function init() {
+    	
         reset();
         lastTime = Date.now();
         main();
-    }
-
+   }
+    
+   
     /* This function is called by main (our game loop) and itself calls all
      * of the functions which may need to update entity's data. Based on how
      * you implement your collision detection (when two entities occupy the
@@ -80,7 +92,14 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+       
+        checkCollisions();
+      win.cancelAnimationFrame(requestId);
+       
+        
+    }
+    function checkCollisions() {
+    	 player.collisions();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -95,6 +114,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+           
     }
 
     /* This function initially draws the "game level", it will then call
@@ -107,7 +127,7 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
-        var rowImages = [
+        var rowImages = [      
                 'images/water-block.png',   // Top row is water
                 'images/stone-block.png',   // Row 1 of 3 of stone
                 'images/stone-block.png',   // Row 2 of 3 of stone
@@ -152,6 +172,7 @@ var Engine = (function(global) {
             enemy.render();
         });
 
+    	console.log("engine renderEntities antes de player render");
         player.render();
     }
 
